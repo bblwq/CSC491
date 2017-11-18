@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Waston/Examples/ServiceExamples/Test.unity
+- path: Assets/Waston/Examples/ServiceExamples/KERQ.unity
   isLoaded: 1
   isActive: 1

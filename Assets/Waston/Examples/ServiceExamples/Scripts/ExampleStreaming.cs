@@ -25,10 +25,10 @@ using System.Collections.Generic;
 
 public class ExampleStreaming : MonoBehaviour
 {
-    private string _username = null;
-    private string _password = null;
-    private string _url = null;
-    
+    private string _username = "e5b0f9d7-c297-4b71-9811-7ea07fa9e463";
+    private string _password = "QrsmddD4GMZ1";
+    private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
+
     private int _recordingRoutine = 0;
     private string _microphoneID = null;
     private AudioClip _recording = null;
