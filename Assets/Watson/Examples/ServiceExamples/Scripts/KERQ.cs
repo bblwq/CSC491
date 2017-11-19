@@ -1,18 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
+
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
+
 using FullSerializer;
 
 public class KERQ : MonoBehaviour
 {
-
     // Conversation API paramaters
     private string C_username = "76175e2e-5b19-4046-bc1f-d40564593cdd";
     private string C_password = "wFna6m5bYMaZ";

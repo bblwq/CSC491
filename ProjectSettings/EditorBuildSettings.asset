@@ -4,4 +4,7 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Watson/Examples/ServiceExamples/KERQ.unity
+    guid: 7c2000ee0aeb77a4b88b67cfd0a85da6
