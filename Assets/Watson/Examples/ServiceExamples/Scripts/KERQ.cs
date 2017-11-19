@@ -7,6 +7,7 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.DataTypes;
+using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
 using FullSerializer;
 
 public class KERQ : MonoBehaviour
@@ -38,16 +39,32 @@ public class KERQ : MonoBehaviour
 
     private SpeechToText _speechToText;
 
+    // Text_to_Speech Parameters
+    private string T2S_username = "7cf2570a-dc7e-449b-8aca-9b2c6e61e42e";
+    private string T2S_password = "w4nnmnNgFpa6";
+    private string T2S_url = "https://stream.watsonplatform.net/text-to-speech/api";
+
+    TextToSpeech _textToSpeech;
+    string _testString = "<speak version=\"1.0\"><prosody pitch=\"150Hz\">This is Text to Speech!</prosody><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
+
+    private bool _synthesizeTested = false;
+
     IEnumerator Start()
     {
         LogSystem.InstallDefaultReactors();
+
+        //  Create credential and instantiate TextToSpeech service
+        Credentials credentials = new Credentials(T2S_username, T2S_password, T2S_url);
+
+        _textToSpeech = new TextToSpeech(credentials);
+
         //  Create credential and instantiate Conversational Service
         Credentials C_credentials = new Credentials(C_username, C_password, C_url);
         _conversation = new Conversation(C_credentials);
         _conversation.VersionDate = _conversationVersionDate;
 
         _waitingForAPI = true;
-        Runnable.Run(GenerateAPICall("1"));
+        Runnable.Run(GenerateConversationCall("1"));
         while (_waitingForAPI)
             yield return null;
 
@@ -62,7 +79,7 @@ public class KERQ : MonoBehaviour
         StartRecording();
     }
 
-    private IEnumerator GenerateAPICall(string content)
+    private IEnumerator GenerateConversationCall(string content)
     {
         _waitingForAPI = true;
         AskQuestion(content);
@@ -70,6 +87,19 @@ public class KERQ : MonoBehaviour
             yield return null;
 
         Log.Debug("ExampleConversation", "API call complete.");
+    }
+
+    private IEnumerator GenerateT2SCall(string text)
+    {
+        //  Synthesize
+        Log.Debug("ExampleTextToSpeech", "Attempting synthesize.");
+
+        _textToSpeech.Voice = VoiceType.en_US_Allison;
+        _textToSpeech.ToSpeech(text, HandleToSpeechCallback, true);
+        while (!_synthesizeTested)
+            yield return null;
+
+        Log.Debug("ExampleTextToSpeech", "Text to Speech examples complete.");
     }
 
     private void AskQuestion(string str)
@@ -90,6 +120,8 @@ public class KERQ : MonoBehaviour
     private void OnMessage(object resp, string data)
     {
         Log.Debug("KERQ", "Conversation: Message Response: {0}", data);
+
+        string T2S_content = "";
 
         //  Convert resp to fsdata
         fsData fsdata = null;
@@ -128,32 +160,34 @@ public class KERQ : MonoBehaviour
                 if (_responseList.Count != 0)
                 {
                     GameObject.Find("Response").GetComponent<Text>().text = _responseList[0].ToString();
+                    T2S_content = _responseList[0].ToString();
                 }
                 else
                 {
                     Log.Debug("Conversation", "Unrecognized intent.");
                     GameObject.Find("Response").GetComponent<Text>().text = "Sorry, I could not understand that. Please say help marry to see what you can respond.";
+                    T2S_content = "Sorry, I could not understand that. Please say help marry to see what you can respond.";
                 }
             }
             else
             {
                 Log.Debug("Conversation", "No Response returned from the API.");
                 GameObject.Find("Response").GetComponent<Text>().text = "Sorry, we cannot respond for now. Please try again.";
+                T2S_content = "Sorry, we cannot respond for now. Please try again.";
             }
         }
         else
         {
             Log.Debug("KERQ", "Failed to get output");
-            GameObject.Find("Response").GetComponent<Text>().text = "[ERROR]";
+            GameObject.Find("Response").GetComponent<Text>().text = "Sorry, we cannot respond for now. Please try again.";
+            T2S_content = "Sorry, we cannot respond for now. Please try again.";
         }
 
-        _waitingForAPI = false;
-    }
+        T2S_content = "<speak version=\"1.0\"><prosody pitch=\"150Hz\">" + T2S_content + "</prosody></speak>";
+        //T2S_content = "<speak version=\"1.0\"><express-as type=\"GoodNews\">" + T2S_content + "</express-as></speak>";
+        Runnable.Run(GenerateT2SCall(T2S_content));
 
-    public void showText()
-    {
-        GameObject.Find("Response").GetComponent<Text>().text = "";
-        Runnable.Run(GenerateAPICall(GameObject.Find("TextField").GetComponent<InputField>().text));
+        _waitingForAPI = false;
     }
 
     public bool Active
@@ -272,7 +306,8 @@ public class KERQ : MonoBehaviour
             if (result.results[0].final)
             {
                 Log.Debug("Result", result.results[0].alternatives[0].transcript);
-                Runnable.Run(GenerateAPICall(result.results[0].alternatives[0].transcript));
+                GameObject.Find("Response").GetComponent<Text>().text = result.results[0].alternatives[0].transcript;
+                Runnable.Run(GenerateConversationCall(result.results[0].alternatives[0].transcript));
             }
 
             //foreach (var res in result.results)
@@ -291,6 +326,28 @@ public class KERQ : MonoBehaviour
             //        }
             //    }
             //}
+        }
+    }
+
+    void HandleToSpeechCallback(AudioClip clip, string customData)
+    {
+        PlayClip(clip);
+    }
+
+    private void PlayClip(AudioClip clip)
+    {
+        if (Application.isPlaying && clip != null)
+        {
+            GameObject audioObject = new GameObject("AudioObject");
+            AudioSource source = audioObject.AddComponent<AudioSource>();
+            source.spatialBlend = 0.0f;
+            source.loop = false;
+            source.clip = clip;
+            source.Play();
+
+            Destroy(audioObject, clip.length);
+
+            _synthesizeTested = true;
         }
     }
 }

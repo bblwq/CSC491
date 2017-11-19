@@ -23,10 +23,10 @@ using System.Collections;
 
 public class ExampleTextToSpeech : MonoBehaviour
 {
-    private string _username = null;
-    private string _password = null;
-    private string _url = null;
-    
+    private string _username = "7cf2570a-dc7e-449b-8aca-9b2c6e61e42e";
+    private string _password = "w4nnmnNgFpa6";
+    private string _url = "https://stream.watsonplatform.net/text-to-speech/api";
+
     TextToSpeech _textToSpeech;
     string _testString = "<speak version=\"1.0\"><say-as interpret-as=\"letters\">I'm sorry</say-as>. <prosody pitch=\"150Hz\">This is Text to Speech!</prosody><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
 
