@@ -83,25 +83,29 @@ public class KERQ : MonoBehaviour
 
     private IEnumerator GenerateConversationCall(string content)
     {
+        GameObject.Find("Status").GetComponent<Text>().text = "[Understanding]";
+
         _waitingForAPI = true;
         AskQuestion(content);
         while (_waitingForAPI)
             yield return null;
 
-        Log.Debug("ExampleConversation", "API call complete.");
+        Log.Debug("Conversation", "API call complete.");
     }
 
     private IEnumerator GenerateT2SCall(string text)
     {
-        //  Synthesize
-        Log.Debug("ExampleTextToSpeech", "Attempting synthesize.");
+        GameObject.Find("Status").GetComponent<Text>().text = "[Speaking]";
 
-        _textToSpeech.Voice = VoiceType.en_US_Allison;
+        //  Synthesize
+        Log.Debug("TextToSpeech", "Attempting synthesize.");
+
+        _textToSpeech.Voice = VoiceType.en_US_Lisa;
         _textToSpeech.ToSpeech(text, HandleToSpeechCallback, true);
         while (!_synthesizeTested)
             yield return null;
 
-        Log.Debug("ExampleTextToSpeech", "Text to Speech examples complete.");
+        Log.Debug("TextToSpeech", "API call complete.");
     }
 
     private void AskQuestion(string str)
@@ -121,7 +125,7 @@ public class KERQ : MonoBehaviour
 
     private void OnMessage(object resp, string data)
     {
-        Log.Debug("KERQ", "Conversation: Message Response: {0}", data);
+        Log.Debug("Conversation", "Message Response: {0}", data);
 
         string T2S_content = "";
 
@@ -144,7 +148,7 @@ public class KERQ : MonoBehaviour
         if (_tempContext != null)
             _context = _tempContext as Dictionary<string, object>;
         else
-            Log.Debug("KERQ", "Failed to get context");
+            Log.Debug("Conversation", "Failed to get context");
 
         //  Retrieve the output text
         object _tempOutput = null;
@@ -152,7 +156,7 @@ public class KERQ : MonoBehaviour
         (resp as Dictionary<string, object>).TryGetValue("output", out _tempOutput);
         if (_tempOutput != null)
         {
-            Log.Debug("Response", _tempOutput.ToString());
+            Log.Debug("Conversation", "Response: "+_tempOutput.ToString());
 
             (_tempOutput as Dictionary<string, object>).TryGetValue("text", out _responseObj);
             List<object> _responseList = null;
@@ -166,7 +170,7 @@ public class KERQ : MonoBehaviour
                 }
                 else
                 {
-                    Log.Debug("Conversation", "Unrecognized intent.");
+                    Log.Debug("Conversation", "Unrecognized intent");
                     GameObject.Find("Response").GetComponent<Text>().text = "Sorry, I could not understand that. Please say help marry to see what you can respond.";
                     T2S_content = "Sorry, I could not understand that. Please say help marry to see what you can respond.";
                 }
@@ -180,7 +184,7 @@ public class KERQ : MonoBehaviour
         }
         else
         {
-            Log.Debug("KERQ", "Failed to get output");
+            Log.Debug("Conversation", "Failed to get output");
             GameObject.Find("Response").GetComponent<Text>().text = "Sorry, we cannot respond for now. Please try again.";
             T2S_content = "Sorry, we cannot respond for now. Please try again.";
         }
@@ -242,12 +246,12 @@ public class KERQ : MonoBehaviour
     private void OnError(string error)
     {
         Active = false;
-        Log.Debug("ExampleStreaming", "Error! {0}", error);
+        Log.Debug("SpeechStreaming", "Error! {0}", error);
     }
 
     private IEnumerator RecordingHandler()
     {
-        Log.Debug("ExampleStreaming", "devices: {0}", Microphone.devices);
+        Log.Debug("SpeechStreaming", "devices: {0}", Microphone.devices);
         _recording = Microphone.Start(_microphoneID, true, _recordingBufferSize, _recordingHZ);
         yield return null;      // let _recordingRoutine get set..
 
