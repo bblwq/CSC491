@@ -42,23 +42,24 @@ public class KERQ : MonoBehaviour
     private SpeechToText _speechToText;
 
     // Text_to_Speech Parameters
-    private string T2S_username = "7cf2570a-dc7e-449b-8aca-9b2c6e61e42e";
-    private string T2S_password = "w4nnmnNgFpa6";
+    private string T2S_username = "728a202b-92cc-4b92-8188-074fa168aa34";
+    private string T2S_password = "Yx3pTyERrrpd";
     private string T2S_url = "https://stream.watsonplatform.net/text-to-speech/api";
 
     TextToSpeech _textToSpeech;
-    string _testString = "<speak version=\"1.0\"><prosody pitch=\"150Hz\">This is Text to Speech!</prosody><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
+    //string _testString = "<speak version=\"1.0\"><prosody pitch=\"150Hz\">This is Text to Speech!</prosody><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
 
     private bool _synthesizeTested = false;
 
     IEnumerator Start()
     {
+        GameObject.Find("Status").GetComponent<Text>().text = "[Initializing]";
         LogSystem.InstallDefaultReactors();
 
         //  Create credential and instantiate TextToSpeech service
-        Credentials credentials = new Credentials(T2S_username, T2S_password, T2S_url);
+        Credentials T2S_credentials = new Credentials(T2S_username, T2S_password, T2S_url);
 
-        _textToSpeech = new TextToSpeech(credentials);
+        _textToSpeech = new TextToSpeech(T2S_credentials);
 
         //  Create credential and instantiate Conversational Service
         Credentials C_credentials = new Credentials(C_username, C_password, C_url);
@@ -100,7 +101,7 @@ public class KERQ : MonoBehaviour
         //  Synthesize
         Log.Debug("TextToSpeech", "Attempting synthesize.");
 
-        _textToSpeech.Voice = VoiceType.en_US_Lisa;
+        _textToSpeech.Voice = VoiceType.en_US_Allison;
         _textToSpeech.ToSpeech(text, HandleToSpeechCallback, true);
         while (!_synthesizeTested)
             yield return null;
@@ -156,7 +157,7 @@ public class KERQ : MonoBehaviour
         (resp as Dictionary<string, object>).TryGetValue("output", out _tempOutput);
         if (_tempOutput != null)
         {
-            Log.Debug("Conversation", "Response: "+_tempOutput.ToString());
+            Log.Debug("Conversation", "Response: " + _tempOutput.ToString());
 
             (_tempOutput as Dictionary<string, object>).TryGetValue("text", out _responseObj);
             List<object> _responseList = null;
