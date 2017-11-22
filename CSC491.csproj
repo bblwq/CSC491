@@ -219,7 +219,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\T2S.cs" />
     <Compile Include="Assets\Watson\Examples\ServiceExamples\Scripts\ExampleAlchemyDataNews.cs" />
     <Compile Include="Assets\Watson\Examples\ServiceExamples\Scripts\ExampleAlchemyLanguage.cs" />
     <Compile Include="Assets\Watson\Examples\ServiceExamples\Scripts\ExampleConversation.cs" />

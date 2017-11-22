@@ -123,7 +123,6 @@ b1e7ba3e8f0547db898f8e7a8217d391 Assembly-CSharp.dll:IBM.Watson.DeveloperCloud.E
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ExampleAlchemyLanguage
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ExampleToneAnalyzer
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ExampleVisualRecognition
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.T2S
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:IBM.Watson.DeveloperCloud.Utilities.Runnable
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ExamplePersonalityInsightsV3
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ExampleDocumentConversion

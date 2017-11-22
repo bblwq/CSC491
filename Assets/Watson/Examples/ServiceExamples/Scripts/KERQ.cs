@@ -42,8 +42,8 @@ public class KERQ : MonoBehaviour
     private SpeechToText _speechToText;
 
     // Text_to_Speech Parameters
-    private string T2S_username = "728a202b-92cc-4b92-8188-074fa168aa34";
-    private string T2S_password = "Yx3pTyERrrpd";
+    private string T2S_username = "1435c529-eb78-4f1f-b608-3eeadde81aff";
+    private string T2S_password = "BTu0OLf57jHr";
     private string T2S_url = "https://stream.watsonplatform.net/text-to-speech/api";
 
     TextToSpeech _textToSpeech;
@@ -66,6 +66,7 @@ public class KERQ : MonoBehaviour
         _conversation = new Conversation(C_credentials);
         _conversation.VersionDate = _conversationVersionDate;
 
+        // Send the initial request to Watson
         _waitingForAPI = true;
         Runnable.Run(GenerateConversationCall("1"));
         while (_waitingForAPI)
@@ -78,8 +79,6 @@ public class KERQ : MonoBehaviour
         _speechToText = new SpeechToText(S2T_credentials);
         Active = true;
         Log.Debug("Speech_to_Text API", "Initialization Finished");
-
-        StartRecording();
     }
 
     private IEnumerator GenerateConversationCall(string content)
@@ -316,32 +315,15 @@ public class KERQ : MonoBehaviour
                 GameObject.Find("Response").GetComponent<Text>().text = result.results[0].alternatives[0].transcript;
                 Runnable.Run(GenerateConversationCall(result.results[0].alternatives[0].transcript));
             }
-
-            //foreach (var res in result.results)
-            //{
-            //    foreach (var alt in res.alternatives)
-            //    {
-            //        string text = alt.transcript;
-            //        Log.Debug("ExampleStreaming", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
-            //    }
-
-            //    if (res.keywords_result != null && res.keywords_result.keyword != null)
-            //    {
-            //        foreach (var keyword in res.keywords_result.keyword)
-            //        {
-            //            Log.Debug("ExampleSpeechToText", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
-            //        }
-            //    }
-            //}
         }
     }
 
     void HandleToSpeechCallback(AudioClip clip, string customData)
     {
-        PlayClip(clip);
+        StartCoroutine(PlayClip(clip));
     }
 
-    private void PlayClip(AudioClip clip)
+    private IEnumerator PlayClip(AudioClip clip)
     {
         if (Application.isPlaying && clip != null)
         {
@@ -350,10 +332,19 @@ public class KERQ : MonoBehaviour
             source.spatialBlend = 0.0f;
             source.loop = false;
             source.clip = clip;
+ 
+            // Stop Listening when Marry is speaking.
+            StopRecording();
+ 
+            // Play the response audio from Marry.
             source.Play();
+            yield return new WaitWhile(() => source.isPlaying);
+
+            // Start listening again after Marry is done.
+            StartRecording();
+            GameObject.Find("Status").GetComponent<Text>().text = "[Listening]";
 
             Destroy(audioObject, clip.length);
-
             _synthesizeTested = true;
         }
     }
