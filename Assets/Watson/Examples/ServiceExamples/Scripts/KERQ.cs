@@ -42,8 +42,8 @@ public class KERQ : MonoBehaviour
     private SpeechToText _speechToText;
 
     // Text_to_Speech Parameters
-    private string T2S_username = "1435c529-eb78-4f1f-b608-3eeadde81aff";
-    private string T2S_password = "BTu0OLf57jHr";
+    private string T2S_username = "74c7bcc0-3149-4a63-8d84-daf9a1cf88e5";
+    private string T2S_password = "MondWmAdxCLv";
     private string T2S_url = "https://stream.watsonplatform.net/text-to-speech/api";
 
     TextToSpeech _textToSpeech;
