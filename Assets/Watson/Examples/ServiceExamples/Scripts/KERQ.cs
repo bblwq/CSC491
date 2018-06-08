@@ -29,8 +29,8 @@ public class KERQ : MonoBehaviour
     private bool _waitingForAPI = true;
 
     // Speech_to_Text Parameters
-    private string S2T_username = "e5b0f9d7-c297-4b71-9811-7ea07fa9e463";
-    private string S2T_password = "QrsmddD4GMZ1";
+    private string S2T_username = "b5f19ddc-3a6e-4052-aa40-120fb1823c96";
+    private string S2T_password = "qjjdRwXpf21J";
     private string S2T_url = "https://stream-tls10.watsonplatform.net/speech-to-text/api";
 
     private int _recordingRoutine = 0;
@@ -42,8 +42,8 @@ public class KERQ : MonoBehaviour
     private SpeechToText _speechToText;
 
     // Text_to_Speech Parameters
-    private string T2S_username = "74c7bcc0-3149-4a63-8d84-daf9a1cf88e5";
-    private string T2S_password = "MondWmAdxCLv";
+    private string T2S_username = "b2af306b-a1ff-4ad5-a848-b64a2a1d4ba1";
+    private string T2S_password = "2xylGQugVUsT";
     private string T2S_url = "https://stream.watsonplatform.net/text-to-speech/api";
 
     TextToSpeech _textToSpeech;
