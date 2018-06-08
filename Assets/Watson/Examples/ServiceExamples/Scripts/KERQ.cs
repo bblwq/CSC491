@@ -31,7 +31,7 @@ public class KERQ : MonoBehaviour
     // Speech_to_Text Parameters
     private string S2T_username = "e5b0f9d7-c297-4b71-9811-7ea07fa9e463";
     private string S2T_password = "QrsmddD4GMZ1";
-    private string S2T_url = "https://stream.watsonplatform.net/speech-to-text/api";
+    private string S2T_url = "https://stream-tls10.watsonplatform.net/speech-to-text/api";
 
     private int _recordingRoutine = 0;
     private string _microphoneID = null;
